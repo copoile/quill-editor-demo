@@ -1,13 +1,16 @@
+import service from '@/utils/request.js'
+
 /**
- * @description 模拟上传接口
+ * 上传文件
+ * @param {*} file
  */
-export function imgUpload() {
-  return new Promise((resolve, reject) => {
-    try {
-      const res = { data: 'https://poile-img.nos-eastchina1.126.net/1591855130727.jpg' }
-      resolve(res)
-    } catch (e) {
-      reject('上传失败')
+export function uploadFile(file) {
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
     }
-  })
+  }
+  const param = new FormData()
+  param.append('file', file)
+  return service.post('/file/upload', param, config)
 }

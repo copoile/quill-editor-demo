@@ -10,6 +10,14 @@ import 'quill/dist/quill.snow.css'
 // 表情css
 import '@/assets/quill-emoji/quill-emoji.css'
 
+/**
+ * mock数据接口，生产环境需要去掉
+ */
+if (process.env.NODE_ENV === 'production') {
+  const { mockXHR } = require('../mock')
+  mockXHR()
+}
+
 Vue.config.productionTip = false
 Vue.use(VueQuillEditor)
 

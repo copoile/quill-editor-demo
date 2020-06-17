@@ -1,6 +1,13 @@
 <template>
   <div class="editor-wrap">
-    <button id="toolbar-img" style="display:none" @click="toolbarImgClick" />
+    <!-- 隐藏的文件上传inpput -->
+    <input
+      id="img-input"
+      type="file"
+      accept="image/*"
+      style="display:none"
+      @change="handleFile"
+    >
     <quill-editor ref="editor" v-model="content" :options="editorOption" />
     <h2>效果展示</h2>
     <!-- 效果展示，这里需要包裹两个div并加上对于的class -->
@@ -19,7 +26,7 @@ import ImageResize from 'quill-image-resize-module'
 import '@/assets/quill-emoji/quill-emoji.js'
 Quill.register('modules/imageResize', ImageResize)
 Quill.register(ImageFormat, true)
-import { imgUpload } from '@/api/file.js'
+import { uploadFile } from '@/api/file.js'
 export default {
   name: 'Editor',
   data() {
@@ -34,8 +41,8 @@ export default {
               emoji: function() {},
               image: function(value) {
                 if (value) {
-                  // 点击事件转移到按钮
-                  document.querySelector('#toolbar-img').click()
+                  // 点击事件转移到隐藏的input
+                  document.querySelector('#img-input').click()
                 } else {
                   this.quill.format('image', false)
                 }
@@ -58,11 +65,11 @@ export default {
     }
   },
   methods: {
-    // 图片工具栏点击事件
-    toolbarImgClick() {
-      alert('自定义图片点击事件')
-      // 上传图片
-      imgUpload().then(res => {
+    // 文件上传input选定文件事件
+    handleFile(e) {
+      const $target = e.target || e.srcElement
+      const file = $target.files[0]
+      uploadFile(file).then(res => {
         // 获取光标位置
         const length = this.editor.getSelection().index
         // 插入图片
